@@ -1,0 +1,49 @@
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+.main {
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../../assets/bckg-purp.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+}
+.login {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid red;
+    align-items: center;
+    justify-content: center;
+    /* height: 100vh; */
+    border: 3px solid #3d008059;
+    border-radius: 10px;
+    width: 350px;
+    height: 300px;
+    
+}
+
+.sub-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input {
+    border: 2.5px solid #3d008059;
+    border-radius: 5px;
+    height: 2rem;
+}
+
+.log-btn {
+    background-color: #3d008054;
+    height: 2rem;
+    border: 2.5px solid #3d008059;
+    border-radius: 5px;
+}
