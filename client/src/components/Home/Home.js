@@ -1,25 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './Home.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchComputers } from '../../store/computersSlice';
 
 
 function Home() {
-  const [computers, setComputers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { computers, loading, error } = useSelector((state) => state.computers);
+
+  
 
   useEffect(() => {
-    fetch('/api/computers')
-      .then(res => res.json())
-      .then(data => {
-        setComputers(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Greška pri učitavanju:', err);
-        setLoading(false);
-      });
-  }, []);
+    dispatch(fetchComputers())
+  }, [dispatch]);
 
   if (loading) return <p>Učitavanje...</p>;
+  if (error) return <p>Greška: {error}</p>;
+
 
   const totalQuantity = computers.length;
   const totalValue = computers.reduce((sum, c) => sum + c.price, 0);

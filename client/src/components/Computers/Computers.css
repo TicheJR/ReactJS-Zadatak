@@ -50,3 +50,45 @@
     background-color: yellow;
     color: black;
   }
+
+  /* add */
+  .add-computer-form {
+  margin: 30px auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  max-width: 1000px;
+}
+
+.add-computer-form input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.add-computer-form button {
+  padding: 10px;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.add-computer-form button[type="submit"] {
+  background-color: #2e86de;
+  color: white;
+}
+
+.add-computer-form button[type="submit"]:hover {
+  background-color: #2163a3;
+}
+
+.add-computer-form button[type="button"] {
+  background-color: #ccc;
+}
+
+.add-computer-form button[type="button"]:hover {
+  background-color: #999;
+}
