@@ -1,29 +1,24 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import './Computers.css'
+import { useQuery } from '@tanstack/react-query';
 
 function Computers() {
-  const [computers, setComputers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
+ const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    fetch('/api/computers')
-      .then(res => res.json())
-      .then(data => {
-        setComputers(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Greška:', err);
-        setLoading(false);
-      });
-  }, []);
+ const {data: computers = [], isLoading, error} = useQuery({
+  queryKey: ['computers'],
+  queryFn: () => fetch('/api/computers').then(res => res.json()),
+  staleTime: 1000 * 60 * 5,
+ });
+
 
   const filteredComputers = computers.filter(comp =>
     comp.brand.toLowerCase().startsWith(searchTerm.toLowerCase())
   );
 
-  if (loading) return <p>Učitavanje...</p>;
+  if (isLoading) return <p>Učitavanje...</p>;
+  if (error) return <p>Greška pri učitavanju podataka.</p>;
+
 
   function highlightMatch(text, query) {
     if (!query) return text;

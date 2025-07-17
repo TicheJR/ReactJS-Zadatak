@@ -1,28 +1,27 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import {  useEffect } from 'react';
 import Login from './components/Login/Login';
 import Home from './components/Home/Home';
 import Computers from './components/Computers/Computers';
 import DashboardLayout from './components/Dashboard/DashboardLayout';
+import { useSelector, useDispatch } from 'react-redux';
+import { loginSuccess, logout } from './store/authSlice';
+
 
 function App() {
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      dispatch(loginSuccess(JSON.parse(storedUser)))
     }
-  }, []);
-
-  const handleLoginSuccess = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
+  }, [dispatch]);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    setUser(null);
+    dispatch(logout())
   };
 
   return (
@@ -31,7 +30,7 @@ function App() {
         <Route
           path="/login"
           element={
-            user ? <Navigate to="/dashboard/home" /> : <Login onLoginSuccess={handleLoginSuccess} />
+            user ? <Navigate to="/dashboard/home" /> : <Login />
           }
         />
 
