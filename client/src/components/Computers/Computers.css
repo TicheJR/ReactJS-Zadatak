@@ -92,3 +92,11 @@
 .add-computer-form button[type="button"]:hover {
   background-color: #999;
 }
+
+.error-msg {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+}
+

@@ -60,5 +60,27 @@
     "price": 1500,
     "quantity": 3,
     "visits": 0
+  },
+  {
+    "id": 1752783156489,
+    "brand": "Lenovo",
+    "ram": "14",
+    "cpu": "Intel",
+    "gpu": "High",
+    "description": "Fensi",
+    "price": 5000,
+    "quantity": 1,
+    "visits": 0
+  },
+  {
+    "id": 1752783321947,
+    "brand": "Lenovo",
+    "ram": "16",
+    "cpu": "Intel i5",
+    "gpu": "Integrated",
+    "description": "Ludilo",
+    "price": 1500,
+    "quantity": 1,
+    "visits": 0
   }
 ]

@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchComputers, addComputer } from '../../store/computersSlice'
-import './Computers';
+import { fetchComputers, addComputer } from '../../store/computersSlice';
+import { useForm } from 'react-hook-form';
+import './Computers.css';
 
 function Computers() {
   const dispatch = useDispatch();
-
   const { computers, loading, error } = useSelector((state) => state.computers);
   const [searchTerm, setSearchTerm] = useState('');
   const [formOpen, setFormOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    brand: '',
-    ram: '',
-    cpu: '',
-    gpu: '',
-    description: '',
-    price: '',
-    quantity: '',
-  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     dispatch(fetchComputers());
@@ -27,132 +25,87 @@ function Computers() {
     comp.brand.toLowerCase().startsWith(searchTerm.toLowerCase())
   );
 
-  // Form handlers
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleAddClick = () => {
-    setFormOpen(true);
-  };
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-
-    if (
-      !formData.brand ||
-      !formData.ram ||
-      !formData.cpu ||
-      !formData.gpu ||
-      !formData.description ||
-      !formData.price ||
-      !formData.quantity
-    ) {
-      alert('Popunite sva polja!');
-      return;
-    }
-
-    dispatch(
-      addComputer({
-        ...formData,
-        price: Number(formData.price),
-        quantity: Number(formData.quantity),
-        visits: 0,
-      })
-    ).then(() => {
-      setFormData({
-        brand: '',
-        ram: '',
-        cpu: '',
-        gpu: '',
-        description: '',
-        price: '',
-        quantity: '',
-      });
+  const onSubmit = (data) => {
+    dispatch(addComputer({
+      ...data,
+      price: Number(data.price),
+      quantity: Number(data.quantity),
+      visits: 0,
+    })).then(() => {
+      reset();
       setFormOpen(false);
     });
   };
 
-
+  const highlightMatch = (text, query) => {
+    if (!query) return text;
+    const regex = new RegExp(`^(${query})`, 'i');
+    return text.replace(regex, '<strong>$1</strong>');
+  };
 
   if (loading) return <p>Učitavanje...</p>;
   if (error) return <p>Greška pri učitavanju podataka.</p>;
 
-
-  function highlightMatch(text, query) {
-    if (!query) return text;
-    const regex = new RegExp(`^(${query})`, 'i');
-    return text.replace(regex, '<strong>$1</strong>');
-  }
-
   return (
     <div className="computers-container">
       <h2>Lista računara</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Pretraga po brendu"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-        <button onClick={handleAddClick}>Add PC</button>
-      </div>
+
+      <input
+        type="text"
+        placeholder="Pretraga po brendu"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
+      <button onClick={() => setFormOpen(true)}>Add PC</button>
 
       {formOpen && (
-        <form className="add-computer-form" onSubmit={handleFormSubmit}>
-          <input
-            name="brand"
-            placeholder="Brand"
-            value={formData.brand}
-            onChange={handleInputChange}
-          />
-          <input
-            name="ram"
-            placeholder="RAM"
-            value={formData.ram}
-            onChange={handleInputChange}
-          />
-          <input
-            name="cpu"
-            placeholder="CPU"
-            value={formData.cpu}
-            onChange={handleInputChange}
-          />
-          <input
-            name="gpu"
-            placeholder="GPU"
-            value={formData.gpu}
-            onChange={handleInputChange}
-          />
-          <input
-            name="description"
-            placeholder="Description"
-            value={formData.description}
-            onChange={handleInputChange}
-          />
-          <input
-            name="price"
-            type="number"
-            placeholder="Price (€)"
-            value={formData.price}
-            onChange={handleInputChange}
-          />
-          <input
-            name="quantity"
-            type="number"
-            placeholder="Quantity"
-            value={formData.quantity}
-            onChange={handleInputChange}
-          />
+        <form className="add-computer-form" onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <input {...register('brand', { required: 'Brand je obavezan' })} placeholder="Brand" />
+            {errors.brand && <span className="error-msg">{errors.brand.message}</span>}
+          </div>
+
+          <div>
+            <input {...register('ram', { required: 'RAM je obavezan' })} placeholder="RAM" />
+            {errors.ram && <span className="error-msg">{errors.ram.message}</span>}
+          </div>
+
+          <div>
+            <input {...register('cpu', { required: 'CPU je obavezan' })} placeholder="CPU" />
+            {errors.cpu && <span className="error-msg">{errors.cpu.message}</span>}
+          </div>
+
+          <div>
+            <input {...register('gpu', { required: 'GPU je obavezan' })} placeholder="GPU" />
+            {errors.gpu && <span className="error-msg">{errors.gpu.message}</span>}
+          </div>
+
+          <div>
+            <input {...register('description', { required: 'Opis je obavezan' })} placeholder="Description" />
+            {errors.description && <span className="error-msg">{errors.description.message}</span>}
+          </div>
+
+          <div>
+            <input
+              type="number"
+              {...register('price', { required: 'Cena je obavezna', valueAsNumber: true })}
+              placeholder="Price (€)"
+            />
+            {errors.price && <span className="error-msg">{errors.price.message}</span>}
+          </div>
+
+          <div>
+            <input
+              type="number"
+              {...register('quantity', { required: 'Količina je obavezna', valueAsNumber: true })}
+              placeholder="Quantity"
+            />
+            {errors.quantity && <span className="error-msg">{errors.quantity.message}</span>}
+          </div>
+
           <button type="submit">Dodaj računar</button>
-          <button type="button" onClick={() => setFormOpen(false)}>
-            Otkaži
-          </button>
+          <button type="button" onClick={() => setFormOpen(false)}>Otkaži</button>
         </form>
       )}
 
